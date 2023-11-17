@@ -1,0 +1,632 @@
+<div class="container-fluid my-5">
+    <div class="bg-light p-5">
+        <div class="d-flex flex-row col-12">
+            <div class="col-3">
+                <h5 class="text-start">PETROTEC GROUP</h5>
+            </div>
+            <div class="col-6">
+                <h4 class="text-center">VENDOR REGISTRATION FORM</h4>
+            </div>
+            <div class="col-3">
+                <h5 class="text-end"><i class="fa fa-xl fa-regular fa-building"></i></h5>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="RouteID==null">
+        <div class="d-flex-inline m-3 text-end">
+            <button class="btn btn-primary p-2 fs-5" routerLink="/VendorList">Vendor List</button>
+        </div>
+    </div>
+    <div *ngIf="RouteID!=null">
+        <div class="d-flex m-3 justify-content-between ">
+            <button class="btn btn-primary p-2 fs-5" routerLink="">New Entry+</button>
+            <button class="btn btn-primary p-2 fs-5" routerLink="/VendorList">Back</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <form [formGroup]="vendorRegistrationForm">
+
+            <div class="border p-3 my-4 shadow rounded bg-secondary-subtle">
+                <h3>A. GENERAL BUSINESS INFORMATION</h3>
+                <!-- companyName -->
+                <div class="form-group pt-3">
+                    <div class="d-flex flex-row"
+                        [class.error]="vendorRegistrationForm.controls['companyName'].dirty && vendorRegistrationForm.hasError('required','companyName')">
+                        <label for="companyName" class="col-3 text-center">Company Name<span
+                                style="color:red">*</span></label>
+                        <select #optionChosen formControlName="companyName" id="companyName" class="form-select">
+                            <!-- <option disabled>Choose a Company</option> -->
+                            <option [value]="Company.companyID" *ngFor="let Company of CompanyNameList"
+                                [selected]="selectedvalue" [disabled]="selectedvalue">{{Company.CompanyName}}</option>
+                        </select>
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['companyName'].dirty && vendorRegistrationForm.hasError('required','companyName')"
+                    class="text-danger d-flex justify-content-center">
+                    *companyName is required
+                </small>
+
+
+                <!-- streetAddress -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['streetAddress'].dirty && vendorRegistrationForm.hasError('required','streetAddress')">
+                        <label for="streetAddress" class="col-3 text-center">street Address<span
+                                style="color:red">*</span></label>
+                        <input formControlName="streetAddress" id="streetAddress" type="text"
+                            placeholder="Enter StreetAddress" class="form-control" [readonly]="selectedvalue">
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['streetAddress'].dirty && vendorRegistrationForm.hasError('required','streetAddress')"
+                    class="text-danger d-flex justify-content-center">
+                    *StreetAddress is required
+                </small>
+
+
+                <!-- country -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['country'].dirty && vendorRegistrationForm.hasError('required','country')">
+                        <label for="country" class="col-3 text-center"> Country<span style="color:red">*</span></label>
+                        <select #countryValue formControlName="country" id="country" class="form-select"
+                            (change)="LoadStateList(countryValue.value)">
+                            <option [value]="country.CountryID" *ngFor="let country of CountryNameList"
+                                [selected]="selectedvalue" [disabled]="selectedvalue">{{country.CountryName}}</option>
+                        </select>
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['country'].dirty && vendorRegistrationForm.hasError('required','country')"
+                    class="text-danger d-flex justify-content-center">
+                    *country is required
+                </small>
+
+
+                <!-- state -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['state'].dirty && vendorRegistrationForm.hasError('required','state')">
+                        <label for="state" class="col-3 text-center"> State<span style="color:red">*</span></label>
+                        <select #stateValue formControlName="state" id="state" class="form-select"
+                            (change)="LoadCityList(stateValue.value)">
+                            <option [value]="state.StateID" *ngFor="let state of StateNameList"
+                                [selected]="selectedvalue" [disabled]="selectedvalue">{{state.StateName}}</option>
+                        </select>
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['state'].dirty && vendorRegistrationForm.hasError('required','state')"
+                    class="text-danger d-flex justify-content-center">
+                    *state is required
+                </small>
+
+
+                <!-- city -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['city'].dirty && vendorRegistrationForm.hasError('required','city')">
+                        <label for="city" class="col-3 text-center"> City<span style="color:red">*</span></label>
+                        <select formControlName="city" id="city" class="form-select">
+                            <option [value]="city.CityID" *ngFor="let city of CityNameList" [selected]="selectedvalue"
+                                [disabled]="selectedvalue">{{city.CityName}}</option>
+                        </select>
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['city'].dirty && vendorRegistrationForm.hasError('required','city')"
+                    class="text-danger d-flex justify-content-center">
+                    *city is required
+                </small>
+
+                <!-- phoneNumber -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['phoneNumber'].dirty && vendorRegistrationForm.hasError('required','phoneNumber')">
+                        <label for="phoneNumber" class="col-3 text-center">Telephone Number<span
+                                style="color:red">*</span></label>
+                        <input formControlName="phoneNumber" class="form-control" id="phoneNumber" maxlength="10"
+                            type="text" [readonly]="selectedvalue"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                            placeholder="Enter phoneNumber">
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['phoneNumber'].dirty && vendorRegistrationForm.hasError('required','phoneNumber')"
+                    class="text-danger d-flex justify-content-center">
+                    *phoneNumber is required
+                </small>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['phoneNumber'].dirty && vendorRegistrationForm.hasError('pattern','phoneNumber')"
+                    class="text-danger d-flex justify-content-center">
+                    *phoneNumber should be 10 digits
+                </small>
+
+                <!-- FaxNumber -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                    [class.error]="vendorRegistrationForm.controls['FaxNumber'].dirty && vendorRegistrationForm.hasError('required','FaxNumber')">
+                        <label for="FaxNumber" class="col-3 text-center">Fax Number<span
+                            style="color:red">*</span></label>
+                        <input formControlName="FaxNumber" class="form-control" id="FaxNumber"
+                            type="text" [readonly]="selectedvalue"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                            placeholder="Enter FaxNumber">
+                    </div>
+                </div>
+                <small
+                *ngIf="vendorRegistrationForm.controls['FaxNumber'].dirty && vendorRegistrationForm.hasError('required','FaxNumber')"
+                class="text-danger d-flex justify-content-center">
+                *FaxNumber is required
+            </small>
+
+
+                <!-- emailAddress -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['emailAddress'].dirty && vendorRegistrationForm.hasError('required','emailAddress')">
+                        <label for="emailAddress" class="col-3 text-center"> Email Address<span
+                                style="color:red">*</span></label>
+                        <input #emailID (keydown)="emailValidity(emailID.value,value.innerHTML)" formControlName="emailAddress" id="emailAddress" type="text"
+                            placeholder="Enter EmailAddress" [readonly]="selectedvalue" class="form-control"
+                            style="width: 500px !important;">
+                        <button type="button" class="btn btn-secondary px-2 mx-3" (click)="GenerateOTP(emailID.value)"
+                            [style]="HideGenerate"
+                            [disabled]="!vendorRegistrationForm.controls['emailAddress'].valid">Generate OTP</button>
+                        <input #UserEnteredOTP type="text" placeholder="Enter OTP" class="rounded border text-center"
+                            [style]="OTPinputBox" maxlength="4">
+                        <i #value class="fa fa-regular fa-circle-check px-2" style="align-self: center;cursor: pointer;"
+                            [style]="OTPVerification" (click)="CheckValidOTP(UserEnteredOTP.value)">{{isVerified}}</i>
+                        <!-- check with ngif if value matches after generating -->
+                    </div>
+
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['emailAddress'].dirty && vendorRegistrationForm.hasError('required','emailAddress')"
+                    class="text-danger d-flex justify-content-center">
+                    *EmailAddress is required
+                </small>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['emailAddress'].dirty && vendorRegistrationForm.hasError('pattern','emailAddress')"
+                    class="text-danger d-flex justify-content-center">
+                    *Enter Proper EmailAddress
+                </small>
+
+
+                <!-- certificateRegistration -->
+                <div class="form-group pt-3">
+                    <div class="d-flex" [class.error]="vendorRegistrationForm.controls['certificateRegistration'].dirty && vendorRegistrationForm.hasError('required','certificateRegistration')"
+                        *ngIf="RouteID==null">
+                        <label for="certificateRegistration" class="col-3 text-center">Certificate of Registration<span
+                                style="color:red">*</span></label>
+                        <input (change)="singleFile($event)" formControlName="certificateRegistration"
+                            id="certificateRegistration" type="file">
+                    </div>
+                    <div class="form-group pt-3 col-12">
+                        <label for="" class="col-3"></label>
+                        <a href="../../../assets/event-vendor-registration-form.pdf" class="col-auto" download>Click to
+                            Download Form</a>
+                    </div>
+
+                    <div class="form-group pt-3 col-12 text-center" *ngIf="RouteID!=null">
+                        <h5>Attachment</h5>
+                        <div *ngFor="let item of RegistrationCertificateDownload">
+                            <a (click)="download(item.RegistrationCertificates)"
+                                class="linkTag">{{item.SinglePDFFileName}}</a>
+                        </div>
+                    </div>
+
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['certificateRegistration'].dirty && vendorRegistrationForm.hasError('required','certificateRegistration')"
+                    class="text-danger d-flex justify-content-center">
+                    *Certificate of Registration is required
+                </small>
+
+            </div>
+
+
+            <div class="border p-3 my-4 shadow rounded bg-secondary-subtle">
+                <h4>B. COMPANY CONTACTS</h4>
+                <!-- DropDown List -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['DesignationList'].dirty && vendorRegistrationForm.hasError('required','DesignationList')">
+                        <label for="DesignationList" class="col-3 text-center"> DesignationList<span
+                                style="color:red">*</span></label>
+                        <select #designationName formControlName="DesignationList" id="DesignationList"
+                            class="form-select" (change)="AddDesignation(designationName.value)"
+                            (mouseover)="ResetMouseOver()" (keydown)="ResetMouseOver()">
+                            <option [value]="designationName.Designation"
+                                *ngFor="let designationName of DesignationtableList" [disabled]="selectedvalue">
+                                {{designationName.Designation}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <small
+                    *ngIf="(vendorRegistrationForm.controls['DesignationList'].dirty && vendorRegistrationForm.hasError('required','DesignationList') &&
+                    vendorRegistrationForm.controls['DesignationList'].touched && SavedCompanyContactsData.length==0)||(vendorRegistrationForm.controls['DesignationList'].dirty && vendorRegistrationForm.hasError('required','DesignationList') && SavedCompanyContactsData.length==0)"
+                    class="text-danger d-flex justify-content-center">
+                    *Designation is required
+                </small>
+
+
+
+                <!--start  -->
+                <table class="col-12 m-3" *ngIf="SavedCompanyContactsData.length>=1">
+                    <tr>
+                        <th class="col-4">Designation</th>
+                        <th class="col-2">Name</th>
+                        <th class="col-2">Phone</th>
+                        <th class="col-3">Email</th>
+                        <th class="auto" *ngIf="RouteID == null"></th>
+                    </tr>
+                    <tr *ngFor="let savedData of SavedCompanyContactsData">
+                        <td class="col-4">{{savedData.Designation}}</td>
+                        <td class="col-2">{{savedData.ContactsName}}</td>
+                        <td class="col-2">{{savedData.ContactsPhoneNumber}}</td>
+                        <td class="col-3">{{savedData.ContactsEmailID}}</td>
+                        <td class="auto" *ngIf="RouteID == null"><i class="fa fa-trash" style="cursor: pointer;" (click)="DeleteCompanyContactRecord(savedData)"></i></td>
+                </table>
+                <!-- end -->
+
+
+                <form [formGroup]="CompanyContactsForm">
+                    <div [style]="isDesignationListSelected" class="d-flex flex-column">
+                        <table class="col-12 m-3">
+                            <tr>
+                                <th class="col-4">Designation</th>
+                                <th class="col-3">Name</th>
+                                <th class="col-2">Phone</th>
+                                <th class="col-3">Email</th>
+                            </tr>
+                            <tr>
+                                <td class="col-4">{{DesignationName}}</td>
+                                <td class="col-3">
+                                    <!-- CompanyContactsName -->
+                                    <div class="form-group pt-3">
+                                        <div class="d-flex"
+                                            [class.error]="CompanyContactsForm.controls['CompanyContactsName'].dirty && CompanyContactsForm.hasError('required','CompanyContactsName')">
+                                            <input #ContactsName formControlName="CompanyContactsName"
+                                                id="CompanyContactsName" type="text" placeholder="Enter Name"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td class="col-2">
+                                    <!-- CompanyContactsPhoneNumber -->
+                                    <div class="form-group pt-3">
+                                        <div class="d-flex"
+                                            [class.error]="CompanyContactsForm.controls['CompanyContactsPhoneNumber'].dirty && CompanyContactsForm.hasError('required','CompanyContactsPhoneNumber')">
+                                            <input #ContactsPhoneNumber formControlName="CompanyContactsPhoneNumber"
+                                                id="CompanyContactsPhoneNumber" maxlength="10" type="text"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                                placeholder="Enter Phone Number" class="form-control">
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td class="col-3">
+                                    <!-- CompanyContactsEmailID -->
+                                    <div class="form-group pt-3">
+                                        <div class="d-flex"
+                                            [class.error]="CompanyContactsForm.controls['CompanyContactsEmailID'].dirty && CompanyContactsForm.hasError('required','CompanyContactsEmailID')">
+                                            <input #ContactsEmailID formControlName="CompanyContactsEmailID"
+                                                id="CompanyContactsEmailID" type="text" placeholder="Enter EmailID"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <small *ngIf="nameNecessary=='Y' && CompanyContactsForm.get('CompanyContactsName')!.errors &&
+                                    CompanyContactsForm.get('CompanyContactsName')!.errors?.['required'] &&
+                                    CompanyContactsForm.get('CompanyContactsName')!.touched
+                                    " class="text-danger d-flex justify-content-center">*Name is required</small>
+                                </td>
+                                <td>
+                                    <small *ngIf="phonenumberNecessary=='Y' && CompanyContactsForm.get('CompanyContactsPhoneNumber')!.errors &&
+                                    CompanyContactsForm.get('CompanyContactsPhoneNumber')!.errors?.['required'] &&
+                                    CompanyContactsForm.get('CompanyContactsPhoneNumber')!.touched
+                                    " class="text-danger d-flex justify-content-center">*PhoneNumber is required</small>
+                                    <small
+                                        *ngIf="phonenumberNecessary=='Y' && CompanyContactsForm.hasError('pattern','CompanyContactsPhoneNumber')"
+                                        class="text-danger d-flex justify-content-center">
+                                        *phoneNumber should be 10 digits
+                                    </small>
+                                </td>
+                                <td>
+                                    <small
+                                        *ngIf="phonenumberNecessary=='Y' && CompanyContactsForm.get('CompanyContactsEmailID')!.errors &&
+                                        CompanyContactsForm.get('CompanyContactsEmailID')!.errors?.['required'] &&
+                                        CompanyContactsForm.get('CompanyContactsEmailID')!.touched
+                                        " class="text-danger d-flex justify-content-center">
+                                        *EmailID is required
+                                    </small>
+                                    <small
+                                        *ngIf="emailNecessary=='Y' && CompanyContactsForm.hasError('pattern','CompanyContactsEmailID')"
+                                        class="text-danger d-flex justify-content-center">
+                                        *Enter Proper EmailID
+                                    </small>
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn btn-dark p-2 m-3 w-25" style="margin-left: 40% !important;"
+                            (click)="SaveCompanyContactsDetails(ContactsName.value,ContactsPhoneNumber.value,ContactsEmailID.value)"
+                            [disabled]="!(
+                ((CompanyContactsForm.controls['CompanyContactsName'].valid && nameNecessary=='Y')||(nameNecessary=='N'))&&
+                ((CompanyContactsForm.controls['CompanyContactsPhoneNumber'].valid && phonenumberNecessary=='Y')|| (phonenumberNecessary=='N'))&&
+                ((CompanyContactsForm.controls['CompanyContactsEmailID'].valid && emailNecessary=='Y') ||(emailNecessary=='N'))
+                )">Save</button>
+                        <!-- [disabled]="checkAllnValue">Save</button> -->
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="border p-3 my-4 shadow rounded bg-secondary-subtle">
+                <h4>C. BUSINESS STRUCTURE</h4>
+<!-- 
+                <ng-container *ngFor="let item of BusinessTypeList">
+                    <label>
+                        <input type="checkbox" value="{{item.BusinessType}}" (change)="handle($event)">{{item.BusinessType}}
+                    </label>
+                </ng-container>
+                <div>{{vendorRegistrationForm.get('langs')?.value}}</div> -->
+
+                <!-- businessType -->
+                <div class="form-group pt-3">
+                    <div
+                        [class.error]="vendorRegistrationForm.controls['businessType'].dirty && vendorRegistrationForm.hasError('','businessType')">
+                        <label class="col-3 text-center">Type of Business<span style="color:red">*</span></label>
+                        <div *ngFor="let item of BusinessTypeList" class="d-inline">
+                            <label [for]="item.BusinessTypeID" class="px-2 ps-5">{{item.BusinessType}}</label>
+                            <input type="checkbox" [id]="item.BusinessTypeID" (change)="handle($event)"
+                                [value]="item.BusinessType" [checked]="item.IsChecked" [disabled]="RouteID">
+                            <!-- formControlName="businessType" -->
+                        </div>
+                    </div>
+                </div>
+                <small *ngIf="vendorRegistrationForm.controls['businessType'].dirty && vendorRegistrationForm.hasError('required','businessType')" class="text-danger d-flex justify-content-center">
+                *businessType is required
+            </small>
+
+                <!-- <small *ngIf="!vendorRegistrationForm.controls['businessType'].value && !vendorRegistrationForm.controls['businessType'].errors" class="text-danger d-flex justify-content-center">
+                *Select a CheckBox option
+            </small> -->
+
+                <!-- companyType -->
+                <div class="form-group pt-3">
+                    <div
+                        [class.error]="vendorRegistrationForm.controls['companyType'].dirty && vendorRegistrationForm.hasError('required','companyType')">
+                        <label for="companyType" class="col-3 text-center">Type of Company<span
+                                style="color:red">*</span></label>
+                        <div *ngFor="let i of CompanyTypesList" class="d-inline">
+                            <label [for]="i.CompanyType" class="px-2 ps-5">{{i.CompanyType}}</label>
+                            <input formControlName="companyType" type="radio" [id]="i.CompanyType"
+                                (change)="ChooseCompanyName($event)" [value]="i.CompanyType">
+                        </div>
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['companyType'].dirty && vendorRegistrationForm.hasError('required','companyType')"
+                    class="text-danger d-flex justify-content-center">
+                    *companyType is required
+                </small>
+            </div>
+
+            <div class="border p-3 my-4 shadow rounded bg-secondary-subtle">
+                <h4>D. MANAGEMENT SYSTEM</h4>
+                <!-- DropDown List -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['Certification'].dirty && vendorRegistrationForm.hasError('required','Certification')">
+                        <label for="Certification" class="col-3 text-center"> Certification<span
+                                style="color:red">*</span></label>
+                        <!-- (click)="CertificationSaving(CetificationName.value)" -->
+                        <select #CetificationName formControlName="Certification" id="Certification" class="form-select"
+                            (change)="CertificationSaving(CetificationName.value)" (mouseover)="ResetMouseOver()"
+                            (keydown)="ResetMouseOver()">
+                            <option [value]="CetificationName.CertifiedTo"
+                                *ngFor="let CetificationName of ManagementSystemtableList" [disabled]="selectedvalue">
+                                {{CetificationName.CertifiedTo}}</option>
+                        </select>
+                    </div>
+                </div>
+                <small
+                    *ngIf="(vendorRegistrationForm.controls['Certification'].dirty && vendorRegistrationForm.hasError('required','Certification') &&
+                    vendorRegistrationForm.controls['Certification'].touched && ManagementData.length==0)||(vendorRegistrationForm.controls['Certification'].dirty && vendorRegistrationForm.hasError('required','Certification') && ManagementData.length==0)"
+                    class="text-danger d-flex justify-content-center">
+                    *Certification is required
+                </small>
+
+
+                <!-- table starts -->
+                <table class="col-12 m-3" *ngIf="ManagementData.length>=1">
+                    <tr>
+                        <th class="col-4">Certified to</th>
+                        <th class="col-3">Date Certified</th>
+                        <th class="col-2">Certification Body</th>
+                        <th class="col-2">Certification No.</th>
+                        <th class="col-auto" *ngIf="RouteID == null"></th>
+                    </tr>
+                    <tr *ngFor="let Data of ManagementData">
+                        <td class="col-4">{{Data.name}}</td>
+                        <td class="col-3">{{Data.DateCertified | date: 'dd/MM/yyyy' }}</td>
+                        <td class="col-2">{{Data.CertificationBody}}</td>
+                        <td class="col-2">{{Data.CertificationNumber}}</td>
+                        <td class="col-auto" *ngIf="RouteID == null"><i class="fa fa-trash" style="cursor: pointer;" (click)="DeleteManagementSystemtRecord(Data)"></i></td>
+                </table>
+
+                <!-- table ends -->
+
+                <div [style]="isCertificationSelected" class="d-flex flex-column">
+                    <table class="col-12 m-3">
+                        <tr>
+                            <th class="col-4">Certified To</th>
+                            <th class="col-3">Date Certified</th>
+                            <th class="col-2">Certification Body</th>
+                            <th class="col-3">Certification No.</th>
+                        </tr>
+                        <tr>
+                            <td class="col-4">{{CertificateName}}</td>
+                            <td class="col-3">
+                                <!-- CertificationDate -->
+                                <div class="form-group pt-3">
+                                    <div class="d-flex"
+                                        [class.error]="vendorRegistrationForm.controls['CertificationDate'].dirty && vendorRegistrationForm.hasError('required','CertificationDate')">
+                                        <input #CerttificateDate formControlName="CertificationDate"
+                                            id="CertificationDate" type="date" placeholder="Enter CertificationDate" (change)="dateFilter(CerttificateDate.value)"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td class="col-2">
+                                <!-- CertificationBody -->
+                                <div class="form-group pt-3">
+                                    <div class="d-flex"
+                                        [class.error]="vendorRegistrationForm.controls['CertificationBody'].dirty && vendorRegistrationForm.hasError('required','CertificationBody')">
+                                        <input #CertificateBody formControlName="CertificationBody"
+                                            id="CertificationBody"
+                                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90)||(event.charCode >= 97 && event.charCode <= 122)"
+                                            type="text" placeholder="Enter CertificationBody" class="form-control">
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td class="col-3">
+                                <!-- CertificationNumber -->
+                                <div class="form-group pt-3">
+                                    <div class="d-flex"
+                                        [class.error]="vendorRegistrationForm.controls['CertificationNumber'].dirty && vendorRegistrationForm.hasError('required','CertificationNumber')">
+                                        <input #CertificateNumber formControlName="CertificationNumber"
+                                            id="CertificationNumber"
+                                            onkeypress="return ((event.charCode >= 65 && event.charCode <= 90)||(event.charCode >= 97 && event.charCode <= 122)||(event.charCode >= 48 && event.charCode <= 57))"
+                                            type="text" placeholder="Enter CertificationNumber" class="form-control">
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><small
+                                    *ngIf="vendorRegistrationForm.get('CertificationDate')!.errors &&
+                                    vendorRegistrationForm.get('CertificationDate')!.errors?.['required'] &&
+                                    vendorRegistrationForm.get('CertificationDate')!.touched
+                                    "
+                                    class="text-danger d-flex justify-content-center">
+                                    *CertificateDate is required
+                                </small></td>
+                            <td>
+                                <small
+                                    *ngIf="vendorRegistrationForm.controls['CertificationBody'].dirty && vendorRegistrationForm.hasError('required','CertificationBody')"
+                                    class="text-danger d-flex justify-content-center">
+                                    *CertificateBody is required
+                                </small>
+                            </td>
+                            <td>
+                                <small
+                                    *ngIf="vendorRegistrationForm.controls['CertificationNumber'].dirty && vendorRegistrationForm.hasError('required','CertificationNumber')"
+                                    class="text-danger d-flex justify-content-center">
+                                    *CertificateNumber is required
+                                </small>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="button" class="btn btn-dark p-2 m-3 w-25" style="margin-left: 40% !important;"
+                        (click)="SaveManagementSystemDetails(CerttificateDate.value,CertificateBody.value,CertificateNumber.value)"
+                        [disabled]="!(vendorRegistrationForm.controls['CertificationDate'].valid && vendorRegistrationForm.controls['CertificationBody'].valid && vendorRegistrationForm.controls['CertificationNumber'].valid)">Save</button>
+                </div>
+            </div>
+
+            <div class="border p-3 my-4 shadow rounded bg-secondary-subtle">
+                <h4>E. CONFIRMATION OF THE FILLED-UP FORM</h4>
+
+                <!-- submittedBy -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['submittedBy'].dirty && vendorRegistrationForm.hasError('required','submittedBy')">
+                        <label for="submittedBy" class="col-3 text-center">Submitted By<span
+                                style="color:red">*</span></label>
+                        <input formControlName="submittedBy" id="submittedBy" type="text" placeholder="submitted By"
+                            class="form-control" [readonly]="selectedvalue">
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['submittedBy'].dirty && vendorRegistrationForm.hasError('required','submittedBy')"
+                    class="text-danger d-flex justify-content-center">
+                    *submittedBy is required
+                </small>
+
+                <!-- submittedDate -->
+                <div class="form-group pt-3">
+                    <div class="d-flex flex-row">
+                        <label for="submittedDate" class="col-3 text-center">Date Submitted<span
+                                style="color:red">*</span></label>
+                        <input type="date" [value]="Currentdate" disabled>
+                    </div>
+                </div>
+
+
+                <!-- purchasedBy -->
+                <div class="form-group pt-3">
+                    <div class="d-flex"
+                        [class.error]="vendorRegistrationForm.controls['purchasedBy'].dirty && vendorRegistrationForm.hasError('required','purchasedBy')">
+                        <label for="purchasedBy" class="col-3 text-center"> purchaser<span
+                                style="color:red">*</span></label>
+                        <select formControlName="purchasedBy" id="purchasedBy" class="form-select">
+                            <option [value]="purchaser.PurchaserName" *ngFor="let purchaser of PurchaserList"
+                                [selected]="selectedvalue" [disabled]="selectedvalue">{{purchaser.PurchaserName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['purchasedBy'].dirty && vendorRegistrationForm.hasError('required','purchasedBy')"
+                    class="text-danger d-flex justify-content-center">
+                    *purchasedBy is required
+                </small>
+
+                <!-- Multiple files upload -->
+                <div class="form-group pt-3">
+                    <div class="d-flex" [class.error]="vendorRegistrationForm.controls['DeclarationFiles'].dirty && vendorRegistrationForm.hasError('required','DeclarationFiles')"
+                        *ngIf="RouteID==null">
+                        <label for="DeclarationFiles" class="col-3 text-center">Declaration Files<span
+                                style="color:red">*</span></label>
+                        <input (change)="multipleFiles($event)" formControlName="DeclarationFiles" id="DeclarationFiles"
+                            type="file" multiple="multiple">
+                    </div>
+                </div>
+                <small
+                    *ngIf="vendorRegistrationForm.controls['DeclarationFiles'].dirty && vendorRegistrationForm.hasError('required','DeclarationFiles')"
+                    class="text-danger d-flex justify-content-center">
+                    *DeclarationFile is required
+                </small>
+
+                <div class="form-group pt-3 col-12 text-center" *ngIf="RouteID!=null">
+                    <h5>Multiple Attachments</h5>
+                    <div *ngFor="let item of DeclarationFilesDownload">
+                        <a (click)="download(item.DeclarationDocuments)"
+                            class="linkTag">{{item.MultiplePDFFileName}}</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- submit button -->
+            <div class=" d-flex justify-content-center w-100">
+                <button (click)="onSubmit()" type="submit" class="btn btn-primary btn-block mt-5 w-25" [style]="visibility"
+                    [disabled]="enableSubmitButton">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

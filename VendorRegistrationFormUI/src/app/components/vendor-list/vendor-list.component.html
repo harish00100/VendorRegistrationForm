@@ -1,0 +1,44 @@
+<div class="container-fluid p-4 mt-3">
+    <i class="fa fa-2xl fa-solid fa-arrow-left" style="cursor: pointer;" routerLink="/VendorRegistrationForm"></i>
+    <h3 class="text-center">VENDOR LIST</h3>
+    <hr>
+    <table class="table mt-5">
+        <thead>
+            <tr>
+                <th scope="col">CompanyName</th>
+                <th scope="col">StreetAddress</th>
+                <th scope="col">CountryName</th>
+                <th scope="col">StateName</th>
+                <th scope="col">CityName</th>
+                <th scope="col">PhoneNumber</th>
+                <th scope="col">EmailID</th>
+                <th scope="col">BusinessType</th>
+                <th scope="col">CompanyType</th>
+                <th scope="col">SubmittedBy</th>
+                <th scope="col">DateSubmitted</th>
+                <th scope="col">PurchaserName</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let i of VendorTableList">
+                <td>{{i.CompanyName}}</td>
+                <td>{{i.StreetAddress}}</td>
+                <td>{{i.CountryName}}</td>
+                <td>{{i.StateName}}</td>
+                <td>{{i.CityName}}</td>
+                <td>{{i.PhoneNumber}}</td>
+                <td>{{i.EmailID}}</td>
+                <td>{{i.BusinessType}}</td>
+                <td>{{i.CompanyType}}</td>
+                <td>{{i.SubmittedBy}}</td>
+                <td>{{i.DateSubmitted | date}}</td>
+                <td>{{i.PurchaserName}}</td>
+                <td><button class="btn btn-primary" (click)="ViewScreen(i.VendorID)">View</button></td>
+                <td><button class="btn btn-danger" (click)="DeleteRecord(i.VendorID)">Delete</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
